@@ -1,25 +1,38 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import { signInWithGoogle } from './firebase/firebase.utils';
+import { auth } from './firebase/firebase.utils';
 
 function App() {
+
+  const [currentUser, setCurrentUser] = useState(null);
+  const [unsubscribeFromAuth, setUnsubscribeFromAuth] = useState(null);
+
+  useEffect(() => {
+    setUnsubscribeFromAuth(auth.onAuthStateChanged(user => setCurrentUser(user)));
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <div className='user-info'>
+    {
+      currentUser ?
+
+        (<div>
+          <div>
+            <img src={currentUser.photoURL} />
+          </div>
+          <div>Name: {currentUser.displayName}</div>
+          <div>Email: {currentUser.email}</div>
+
+          <button onClick={() => auth.signOut()}>LOG OUT</button>
+        </div>
+        ) :
+
+        <button onClick={signInWithGoogle}>SIGN IN WITH GOOGLE</button>
+
+    }
+  </div >
   );
 }
 

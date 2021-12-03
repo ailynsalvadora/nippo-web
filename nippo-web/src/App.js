@@ -7,18 +7,30 @@ import { DataGrid } from '@material-ui/data-grid';
 // define which columns you have in your data
 const columns = [
   { field: 'Id', headerName: 'Id', width: 100, hide: true},
-  { field: 'Date', headerName: 'Date', width: 150, valueFormatter:toDateTime},
-  { field: 'TimeIn', headerName: 'Time In', width: 150, valueFormatter:toDateTime},
-  { field: 'TimeOut', headerName: 'Time Out', width: 150, valueFormatter:toDateTime},
+  { field: 'Date', headerName: 'Date', width: 150, valueFormatter:toDate},
+  { field: 'TimeIn', headerName: 'Time In', width: 200, valueFormatter:toTime},
+  { field: 'TimeOut', headerName: 'Time Out', width: 200, valueFormatter:toTime},
   { field: 'DayType', headerName: 'Day Type', width: 150,},
-  { field: 'Notes', headerName: 'Notes', width: 150 },
+  { field: 'TotalHours', headerName: 'Total Hours', width: 200,},
+  { field: 'Undertime', headerName: 'UT', width: 150,},
+  { field: 'CompensatedTime', headerName: 'CT', width: 150,},
+  { field: 'Overtime', headerName: 'OT', width: 150,},
+  { field: 'NightDiff', headerName: 'ND', width: 150,},
+  { field: 'Holiday', headerName: 'Hol', width: 150,},
+  { field: 'Notes', headerName: 'Notes', width: 250 },
 ];
 
-function toDateTime(params) {
+function toDate(params) {
   var t = new Date(1970, 0, 1); // Epoch
   t.setSeconds(params.value.seconds);
-  return t;
+  return t.toDateString();
 }
+function toTime(params) {
+  var t = new Date(1970, 0, 1); // Epoch
+  t.setSeconds(params.value.seconds);
+  return t.toTimeString();
+}
+
 class App extends React.Component {
   constructor() {
     super();
@@ -71,8 +83,10 @@ class App extends React.Component {
               <div>Name: {this.state.currentUser.displayName}</div>
               <div>Email: {this.state.currentUser.email}</div>
 
-              <button onClick={() => auth.signOut()}>LOG OUT</button>  
               <button onClick={() => this.showTimesheet()}>View Timesheet</button>
+              <br/>
+              <br/>
+              <button onClick={() => auth.signOut()}>LOG OUT</button>  
             <br/>
             <br/>
             { this.state.timesheet ?
